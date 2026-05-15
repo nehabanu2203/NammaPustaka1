@@ -70,12 +70,13 @@ NammaPustaka1/
 ├── build.gradle.kts
 ├── settings.gradle.kts
 
-
+```
+---
 
 ## 📸 Screenshots
 
 ## Home Screen
-<img src="screenshots/home.png" width="300"/>
+<img src="screenshots/hom.png" width="300"/>
 
 ## Login Screen
 <img src="screenshots/login.png" width="300"/>
@@ -84,15 +85,15 @@ NammaPustaka1/
 ## Dashboard
 <img src="screenshots/dashboard.png" width="300"/>
 ## Lending history
-<img src="screenshots/lending history.png" width="300"/>
+<img src="screenshots/lendinghistory.png" width="300"/>
 ## student registration 
-<img src="screenshots/studen registration.png" width="300"/>
-## leaderboard ranking
-<img src="screenshots/leaderboard ranking <img width="1080" height="2080" alt="1000137914" src="https://github.com/user-attachments/assets/bfc7627d-8274-4b9c-8baf-722126a04cea" />
-<img width="1080" height="2220" alt="1000137915" src="https://github.com/user-attachments/assets/ec2c5119-686b-48ba-985a-af2d68f430ae" />
-<img width="1080" height="2192" alt="1000137916" src="https://github.com/user-attachments/assets/041e5665-4dcd-40f6-834a-f4ad5e9c04ad" />
-<img width="1080" height="2132" alt="1000137917" src="https://github.com/user-attachments/assets/88c485d7-27d2-4af8-8af3-db289025038f" />
-<img width="1080" height="2156" alt="1000137918" src="https://github.com/user-attachments/assets/6c1a3926-3d90-42e3-b8dc-be175b11c277" />
-<img width="1080" height="2256" alt="1000137919" src="https://github.com/user-attachments/assets/8119897c-4088-44d4-8b02-72d509aec595" />
-<img width="1080" height="2108" alt="1000137920" src="https://github.com/user-attachments/assets/b437658a-c510-4ae9-bb72-bd52e850ff57" />
-.png" width="300"/>
+<img src="screenshots/studentregistration.png" width="300"/>
+## leaderboard
+<img src="screenshots/leaderboard.png" width="300"/>
+<img width="1080" height="2080" alt="1000137914" src="https://github.com/user-attachments/assets/b7a816c0-9036-4254-8e35-bac7f7932e0a" />
+<img width="1080" height="2220" alt="1000137915" src="https://github.com/user-attachments/assets/f2038f4c-21cb-4eb4-aafb-0024d53e62f2" />
+<img width="1080" height="2192" alt="1000137916" src="https://github.com/user-attachments/assets/1cc50463-700b-44eb-9dfa-9ca57e5e8733" />
+<img width="1080" height="2132" alt="1000137917" src="https://github.com/user-attachments/assets/12d493d3-1a8d-4a04-b4ec-639dbe01fc26" />
+<img width="1080" height="2156" alt="1000137918" src="https://github.com/user-attachments/assets/2526eddc-34f7-4ad1-b048-ff041d22c479" />
+<img width="1080" height="2256" alt="1000137919" src="https://github.com/user-attachments/assets/84880049-2ba3-4618-88ed-c010eb79a465" />
+<img width="1080" height="2108" alt="1000137920" src="https://github.com/user-attachments/assets/d0b5fb70-5207-418f-b7a3-dedf2350f2c0" />
