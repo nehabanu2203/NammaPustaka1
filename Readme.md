@@ -1,10 +1,11 @@
-<img width="1080" height="2108" alt="1000137920" src="https://github.com/user-attachments/assets/45704f60-abe9-49e3-8a03-8ac350bf4f11" />
-<img width="1080" height="2256" alt="1000137919" src="https://github.com/user-attachments/assets/b6eea719-c36d-4ee2-942f-ae04598e7981" />
-<img width="1080" height="2156" alt="1000137918" src="https://github.com/user-attachments/assets/4d72b5be-134e-48ab-a68d-0f620e873004" />
-<img width="1080" height="2132" alt="1000137917" src="https://github.com/user-attachments/assets/10c8ce4f-6076-44c2-9159-6bb616efe696" />
-<img width="1080" height="2192" alt="1000137916" src="https://github.com/user-attachments/assets/7a6dad22-7a41-4fa4-bb45-dcb3a6be6d8d" />
-<img width="1080" height="2220" alt="1000137915" src="https://github.com/user-attachments/assets/e9e0d707-7b99-48fc-a9bb-fbdcecedb131" />
-<img width="1080" height="2080" alt="1000137914" src="https://github.com/user-attachments/assets/756bd7af-635c-4483-a5d8-9fd9ab09f28d" />
+<img width="1080" height="2080" alt="1000137914" src="https://github.com/user-attachments/assets/0ad60ab0-0f42-4554-871b-57c5fb9cede0" />
+<img width="1080" height="2220" alt="1000137915" src="https://github.com/user-attachments/assets/47cca7ed-7b8a-4141-a35a-cbab5c3d7d96" />
+<img width="1080" height="2192" alt="1000137916" src="https://github.com/user-attachments/assets/fef38e25-31ea-4d11-81b3-f5bc108fc46d" />
+<img width="1080" height="2132" alt="1000137917" src="https://github.com/user-attachments/assets/0d53f034-7dbe-4c37-8149-f38726a3a2ee" />
+<img width="1080" height="2156" alt="1000137918" src="https://github.com/user-attachments/assets/912258b0-9520-48e8-81d5-e3376bf90838" />
+<img width="1080" height="2256" alt="1000137919" src="https://github.com/user-attachments/assets/689b3f79-81f5-483e-9f58-85758bb9bee6" />
+<img width="1080" height="2108" alt="1000137920" src="https://github.com/user-attachments/assets/fbcb0a28-73f3-4430-b0dc-73457f83271c" />
+
 # 📚 Namma Pustaka – Smart Library Management App
 
 ## 📖 Project Overview
