@@ -76,7 +76,7 @@ NammaPustaka1/
 ## 📸 Screenshots
 
 ## Home Screen
-<img src="screenshots/hom.png" width="300"/>
+<img src="screenshots/home.png" width="300"/>
 
 ## Login Screen
 <img src="screenshots/login.png" width="300"/>
