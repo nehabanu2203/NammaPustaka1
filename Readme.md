@@ -1,11 +1,3 @@
-<img width="1080" height="2080" alt="1000137914" src="https://github.com/user-attachments/assets/0ad60ab0-0f42-4554-871b-57c5fb9cede0" />
-<img width="1080" height="2220" alt="1000137915" src="https://github.com/user-attachments/assets/47cca7ed-7b8a-4141-a35a-cbab5c3d7d96" />
-<img width="1080" height="2192" alt="1000137916" src="https://github.com/user-attachments/assets/fef38e25-31ea-4d11-81b3-f5bc108fc46d" />
-<img width="1080" height="2132" alt="1000137917" src="https://github.com/user-attachments/assets/0d53f034-7dbe-4c37-8149-f38726a3a2ee" />
-<img width="1080" height="2156" alt="1000137918" src="https://github.com/user-attachments/assets/912258b0-9520-48e8-81d5-e3376bf90838" />
-<img width="1080" height="2256" alt="1000137919" src="https://github.com/user-attachments/assets/689b3f79-81f5-483e-9f58-85758bb9bee6" />
-<img width="1080" height="2108" alt="1000137920" src="https://github.com/user-attachments/assets/fbcb0a28-73f3-4430-b0dc-73457f83271c" />
-
 # 📚 Namma Pustaka – Smart Library Management App
 
 ## 📖 Project Overview
@@ -77,6 +69,15 @@ NammaPustaka1/
 ├── README.md
 ├── build.gradle.kts
 ├── settings.gradle.kts
+
+
+<img width="1080" height="2080" alt="1000137914" src="https://github.com/user-attachments/assets/0122c82e-b0c3-4e1d-ba16-f1714df9693c" />
+<img width="1080" height="2220" alt="1000137915" src="https://github.com/user-attachments/assets/021ceca4-a1a1-44de-baa5-7a407b3beaab" />
+<img width="1080" height="2192" alt="1000137916" src="https://github.com/user-attachments/assets/70db35c9-73cd-4dfa-94d5-971766b3aa33" />
+<img width="1080" height="2132" alt="1000137917" src="https://github.com/user-attachments/assets/a2c98ddd-78dd-4bde-9b1b-706af7c7e9cb" />
+<img width="1080" height="2156" alt="1000137918" src="https://github.com/user-attachments/assets/e8b44c86-b05a-4381-b535-e86f30d43bc0" />
+<img width="1080" height="2256" alt="1000137919" src="https://github.com/user-attachments/assets/ef26c137-fc14-4a0a-bfd7-0baf4364750e" />
+<img width="1080" height="2108" alt="1000137920" src="https://github.com/user-attachments/assets/c8e86a01-b20f-4dfb-bab2-6454bb20b4b8" />
 # 📸 Screenshots
 
 ## Home Screen
