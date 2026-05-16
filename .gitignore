@@ -1,15 +1,19 @@
+# Build artifacts
 *.iml
-.gradle
+.gradle/
+/build/
+/app/build/
 /local.properties
-/.idea/caches
-/.idea/libraries
-/.idea/modules.xml
-/.idea/workspace.xml
-/.idea/navEditor.xml
-/.idea/assetWizardSettings.xml
-.DS_Store
-/build
-/captures
+
+# Android Studio
+.idea/
+captures/
 .externalNativeBuild
 .cxx
-local.properties
+
+# OS generated files
+.DS_Store
+Thumbs.db
+
+# Log files
+*.log
