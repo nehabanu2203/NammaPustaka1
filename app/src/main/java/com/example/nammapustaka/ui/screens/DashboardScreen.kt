@@ -448,7 +448,6 @@ fun generatePdfReport(
 
 @Composable
 fun OverdueItem(tx: TransactionEntity, onMarkReturned: () -> Unit, onMarkPaid: () -> Unit) {
-    val sdf = SimpleDateFormat("dd MMM", Locale.getDefault())
     val diff = System.currentTimeMillis() - tx.borrowDate
     val days = diff / (1000 * 60 * 60 * 24)
     val fine = (days - 7) * 2.0
