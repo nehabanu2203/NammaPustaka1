@@ -1,10 +1,15 @@
 package com.example.nammapustaka.ui.screens
 
+import android.Manifest
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.os.Bundle
 import android.speech.RecognitionListener
 import android.speech.RecognizerIntent
 import android.speech.SpeechRecognizer
+import android.widget.Toast
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -21,6 +26,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.core.content.ContextCompat
 import androidx.navigation.NavController
 import com.google.ai.client.generativeai.GenerativeModel
 import com.google.ai.client.generativeai.type.RequestOptions
@@ -38,6 +44,15 @@ fun AIAssistantScreen(navController: NavController) {
     var isListening by remember { mutableStateOf(false) }
     var isThinking by remember { mutableStateOf(false) }
 
+    // Permission launcher
+    val permissionLauncher = rememberLauncherForActivityResult(
+        ActivityResultContracts.RequestPermission()
+    ) { isGranted ->
+        if (!isGranted) {
+            Toast.makeText(context, "Microphone permission is required for voice input", Toast.LENGTH_SHORT).show()
+        }
+    }
+
     // Gemini Initialization
     val generativeModel = remember {
         GenerativeModel(
@@ -48,7 +63,19 @@ fun AIAssistantScreen(navController: NavController) {
     }
 
     // Voice recognition setup
-    val speechRecognizer = remember { SpeechRecognizer.createSpeechRecognizer(context) }
+    val speechRecognizer = remember {
+        try {
+            if (SpeechRecognizer.isRecognitionAvailable(context)) {
+                SpeechRecognizer.createSpeechRecognizer(context)
+            } else {
+                null
+            }
+        } catch (e: Exception) {
+            android.util.Log.e("SPEECH_ERROR", "Failed to init speech recognizer", e)
+            null
+        }
+    }
+    
     val recognitionListener = remember {
         object : RecognitionListener {
             override fun onReadyForSpeech(params: Bundle?) {}
@@ -56,7 +83,12 @@ fun AIAssistantScreen(navController: NavController) {
             override fun onRmsChanged(rmsdB: Float) {}
             override fun onBufferReceived(buffer: ByteArray?) {}
             override fun onEndOfSpeech() { isListening = false }
-            override fun onError(error: Int) { isListening = false }
+            override fun onError(error: Int) { 
+                isListening = false 
+                if (error == SpeechRecognizer.ERROR_INSUFFICIENT_PERMISSIONS) {
+                    Toast.makeText(context, "Permission denied", Toast.LENGTH_SHORT).show()
+                }
+            }
             override fun onResults(results: Bundle?) {
                 val matches = results?.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION)
                 if (!matches.isNullOrEmpty()) {
@@ -71,8 +103,12 @@ fun AIAssistantScreen(navController: NavController) {
     }
 
     DisposableEffect(Unit) {
-        speechRecognizer.setRecognitionListener(recognitionListener)
-        onDispose { speechRecognizer.destroy() }
+        speechRecognizer?.setRecognitionListener(recognitionListener)
+        onDispose { 
+            try {
+                speechRecognizer?.destroy() 
+            } catch (e: Exception) {}
+        }
     }
 
     Scaffold(
@@ -135,7 +171,17 @@ fun AIAssistantScreen(navController: NavController) {
                     .padding(horizontal = 8.dp, vertical = 4.dp)
             ) {
                 IconButton(
-                    onClick = { startListening(speechRecognizer) },
+                    onClick = { 
+                        if (speechRecognizer != null) {
+                            if (ContextCompat.checkSelfPermission(context, Manifest.permission.RECORD_AUDIO) == PackageManager.PERMISSION_GRANTED) {
+                                startListening(speechRecognizer)
+                            } else {
+                                permissionLauncher.launch(Manifest.permission.RECORD_AUDIO)
+                            }
+                        } else {
+                            Toast.makeText(context, "Voice input not supported on this device", Toast.LENGTH_SHORT).show()
+                        }
+                    },
                     modifier = Modifier.background(
                         if (isListening) MaterialTheme.colorScheme.errorContainer else Color.Transparent,
                         RoundedCornerShape(50)
@@ -216,12 +262,25 @@ private fun askGemini(
                 return@launch
             }
 
-            val response = model.generateContent(query)
-            onResult(response.text ?: "I am not sure how to answer that.")
+            val response = try {
+                model.generateContent(query)
+            } catch (e: Exception) {
+                android.util.Log.e("AI_ERROR", "GenerateContent failed", e)
+                throw e
+            }
+            val responseText = response.text
+            if (responseText != null) {
+                onResult(responseText)
+            } else {
+                onResult("The AI returned an empty response. Please try rephrasing your question.")
+            }
         } catch (e: Exception) {
+            android.util.Log.e("AI_ERROR", "Error generating content", e)
             val msg = e.message ?: ""
             if (msg.contains("API_KEY_INVALID")) {
                 onResult("Error: Your API Key is invalid. Please check it in AIAssistantScreen.kt.")
+            } else if (msg.contains("PERMISSION_DENIED")) {
+                onResult("Error: Permission denied. Your API key might not have access to this model.")
             } else {
                 onResult("AI Error: ${e.localizedMessage}. Check internet or key.")
             }

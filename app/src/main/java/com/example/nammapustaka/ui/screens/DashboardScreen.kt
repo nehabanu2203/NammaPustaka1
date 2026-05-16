@@ -1,14 +1,20 @@
 package com.example.nammapustaka.ui.screens
 
+import android.content.Context
 import android.content.Intent
+import android.graphics.Paint
+import android.graphics.pdf.PdfDocument
 import android.net.Uri
+import android.os.Environment
 import android.widget.Toast
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.List
 import androidx.compose.material.icons.filled.Assignment
 import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material.icons.filled.CurrencyRupee
@@ -28,14 +34,18 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.nammapustaka.data.BookEntity
+import com.example.nammapustaka.data.StudentEntity
 import com.example.nammapustaka.data.TransactionEntity
 import com.example.nammapustaka.viewmodel.LibraryViewModel
+import java.io.File
+import java.io.FileOutputStream
 import java.text.SimpleDateFormat
 import java.util.*
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun DashboardScreen(viewModel: LibraryViewModel) {
+fun DashboardScreen(viewModel: LibraryViewModel, navController: androidx.navigation.NavController) {
     val context = LocalContext.current
     val books by viewModel.allBooks.collectAsState()
     val students by viewModel.allStudents.collectAsState()
@@ -45,10 +55,14 @@ fun DashboardScreen(viewModel: LibraryViewModel) {
         !tx.returned && (System.currentTimeMillis() - tx.borrowDate > 7L * 24 * 60 * 60 * 1000)
     }
     
-    val pendingFines = transactions.filter { !it.finePaid }.sumOf { it.fineAmount }
+    val pendingFinesTransactions = transactions.filter { it.fineAmount > 0 && !it.finePaid }
+    val pendingFines = pendingFinesTransactions.sumOf { it.fineAmount }
 
-    // State for Fine Collection Dialog
+    // State for Detail Dialogs
     var showFineCollectionDialog by remember { mutableStateOf(false) }
+    var detailTitle by remember { mutableStateOf("") }
+    var showDetailDialog by remember { mutableStateOf(false) }
+    var currentDetailType by remember { mutableStateOf(DetailType.NONE) }
 
     Scaffold(
         topBar = {
@@ -63,6 +77,77 @@ fun DashboardScreen(viewModel: LibraryViewModel) {
             )
         }
     ) { padding ->
+        if (showDetailDialog) {
+            AlertDialog(
+                onDismissRequest = { showDetailDialog = false },
+                title = { Text(detailTitle) },
+                text = {
+                    Box(modifier = Modifier.heightIn(max = 400.dp)) {
+                        when (currentDetailType) {
+                            DetailType.BOOKS -> {
+                                LazyColumn {
+                                    items(books) { book ->
+                                        ListItem(
+                                            headlineContent = { Text(book.title) },
+                                            supportingContent = { Text(book.author) },
+                                            trailingContent = { 
+                                                Text(if(book.isIssued) "Issued" else "Available", 
+                                                    color = if(book.isIssued) Color.Red else Color(0xFF4CAF50)) 
+                                            }
+                                        )
+                                    }
+                                }
+                            }
+                            DetailType.STUDENTS -> {
+                                LazyColumn {
+                                    items(students) { student ->
+                                        ListItem(
+                                            headlineContent = { Text(student.name) },
+                                            supportingContent = { Text("ID: ${student.studentId} • Class: ${student.className}") },
+                                            trailingContent = { Text("${student.totalPagesRead} pgs") }
+                                        )
+                                    }
+                                }
+                            }
+                            DetailType.OVERDUE -> {
+                                if (overdueTransactions.isEmpty()) {
+                                    Text("No overdue books.")
+                                } else {
+                                    LazyColumn {
+                                        items(overdueTransactions) { tx ->
+                                            ListItem(
+                                                headlineContent = { Text(tx.bookTitle) },
+                                                supportingContent = { Text("Borrower: ${tx.studentName}") }
+                                            )
+                                        }
+                                    }
+                                }
+                            }
+                            DetailType.FINES -> {
+                                if (pendingFinesTransactions.isEmpty()) {
+                                    Text("No pending fines.")
+                                } else {
+                                    LazyColumn {
+                                        items(pendingFinesTransactions) { tx ->
+                                            ListItem(
+                                                headlineContent = { Text(tx.studentName) },
+                                                supportingContent = { Text("${tx.bookTitle} • Pending") },
+                                                trailingContent = { Text("₹${tx.fineAmount}", fontWeight = FontWeight.Bold, color = Color.Red) }
+                                            )
+                                        }
+                                    }
+                                }
+                            }
+                            else -> {}
+                        }
+                    }
+                },
+                confirmButton = {
+                    TextButton(onClick = { showDetailDialog = false }) { Text("Close") }
+                }
+            )
+        }
+
         if (showFineCollectionDialog) {
             // Include both overdue live fines and already returned unpaid fines
             val allPendingFines = transactions.filter { tx ->
@@ -143,14 +228,24 @@ fun DashboardScreen(viewModel: LibraryViewModel) {
                         title = "Books",
                         value = books.size.toString(),
                         icon = Icons.Default.MenuBook,
-                        color = Color(0xFF2196F3)
+                        color = Color(0xFF2196F3),
+                        onClick = {
+                            detailTitle = "Books Collection"
+                            currentDetailType = DetailType.BOOKS
+                            showDetailDialog = true
+                        }
                     )
                     StatCard(
                         modifier = Modifier.weight(1f),
                         title = "Students",
                         value = students.size.toString(),
                         icon = Icons.Default.Group,
-                        color = Color(0xFF4CAF50)
+                        color = Color(0xFF4CAF50),
+                        onClick = {
+                            detailTitle = "Registered Students"
+                            currentDetailType = DetailType.STUDENTS
+                            showDetailDialog = true
+                        }
                     )
                 }
             }
@@ -162,14 +257,24 @@ fun DashboardScreen(viewModel: LibraryViewModel) {
                         title = "Overdue",
                         value = overdueTransactions.size.toString(),
                         icon = Icons.Default.Warning,
-                        color = Color(0xFFF44336)
+                        color = Color(0xFFF44336),
+                        onClick = {
+                            detailTitle = "Overdue Books"
+                            currentDetailType = DetailType.OVERDUE
+                            showDetailDialog = true
+                        }
                     )
                     StatCard(
                         modifier = Modifier.weight(1f),
                         title = "Pending Fines",
                         value = "₹${"%.0f".format(pendingFines)}",
                         icon = Icons.Default.Payments,
-                        color = Color(0xFFFF9800)
+                        color = Color(0xFFFF9800),
+                        onClick = {
+                            detailTitle = "Unpaid Fines"
+                            currentDetailType = DetailType.FINES
+                            showDetailDialog = true
+                        }
                     )
                 }
             }
@@ -203,20 +308,43 @@ fun DashboardScreen(viewModel: LibraryViewModel) {
                 }
             }
 
-            // Student Performance tracking could be added here
             item {
                 Spacer(modifier = Modifier.height(8.dp))
-                Text("Quick Actions", style = MaterialTheme.typography.titleLarge, fontWeight = FontWeight.Black)
+                Text("Management", style = MaterialTheme.typography.titleLarge, fontWeight = FontWeight.Black)
+                Spacer(modifier = Modifier.height(8.dp))
+                Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(12.dp)) {
+                    Button(
+                        onClick = { navController.navigate("students") },
+                        modifier = Modifier.weight(1f),
+                        shape = RoundedCornerShape(12.dp)
+                    ) {
+                        Icon(Icons.Default.Group, null)
+                        Spacer(Modifier.width(8.dp))
+                        Text("Register Students")
+                    }
+                    Button(
+                        onClick = { navController.navigate("leaderboard") },
+                        modifier = Modifier.weight(1f),
+                        shape = RoundedCornerShape(12.dp),
+                        colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.secondary)
+                    ) {
+                        Icon(Icons.AutoMirrored.Filled.List, null)
+                        Spacer(Modifier.width(8.dp))
+                        Text("Ranking")
+                    }
+                }
                 Spacer(modifier = Modifier.height(8.dp))
                 Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(12.dp)) {
                     OutlinedButton(
-                        onClick = { /* Export PDF Report */ },
+                        onClick = { 
+                            generatePdfReport(context, books, students, overdueTransactions, pendingFines)
+                        },
                         modifier = Modifier.weight(1f),
                         shape = RoundedCornerShape(12.dp)
                     ) {
                         Icon(Icons.Default.Assignment, null)
                         Spacer(Modifier.width(8.dp))
-                        Text("Export Report")
+                        Text("Export PDF Report")
                     }
                 }
             }
@@ -224,10 +352,12 @@ fun DashboardScreen(viewModel: LibraryViewModel) {
     }
 }
 
+enum class DetailType { NONE, BOOKS, STUDENTS, OVERDUE, FINES }
+
 @Composable
-fun StatCard(modifier: Modifier, title: String, value: String, icon: ImageVector, color: Color) {
+fun StatCard(modifier: Modifier, title: String, value: String, icon: ImageVector, color: Color, onClick: () -> Unit) {
     Card(
-        modifier = modifier,
+        modifier = modifier.clickable { onClick() },
         shape = RoundedCornerShape(20.dp),
         colors = CardDefaults.cardColors(containerColor = color.copy(alpha = 0.1f)),
         border = androidx.compose.foundation.BorderStroke(1.dp, color.copy(alpha = 0.2f))
@@ -238,6 +368,81 @@ fun StatCard(modifier: Modifier, title: String, value: String, icon: ImageVector
             Text(value, style = MaterialTheme.typography.headlineMedium, fontWeight = FontWeight.Black, color = color)
             Text(title, style = MaterialTheme.typography.labelMedium, color = color.copy(alpha = 0.7f))
         }
+    }
+}
+
+fun generatePdfReport(
+    context: Context, 
+    books: List<BookEntity>, 
+    students: List<StudentEntity>, 
+    overdue: List<TransactionEntity>,
+    totalPendingFine: Double
+) {
+    val pdfDocument = PdfDocument()
+    val titlePaint = Paint().apply {
+        textSize = 20f
+        isFakeBoldText = true
+    }
+    val contentPaint = Paint().apply {
+        textSize = 14f
+    }
+
+    val pageInfo = PdfDocument.PageInfo.Builder(595, 842, 1).create()
+    val page = pdfDocument.startPage(pageInfo)
+    val canvas = page.canvas
+
+    var y = 40f
+    canvas.drawText("NAMMA PUSTAKA - LIBRARY REPORT", 40f, y, titlePaint)
+    y += 30f
+    canvas.drawText("Generated on: ${SimpleDateFormat("dd-MM-yyyy HH:mm", Locale.getDefault()).format(Date())}", 40f, y, contentPaint)
+    y += 40f
+
+    canvas.drawText("OVERVIEW", 40f, y, titlePaint)
+    y += 20f
+    canvas.drawText("Total Books: ${books.size}", 40f, y, contentPaint)
+    y += 20f
+    canvas.drawText("Total Students: ${students.size}", 40f, y, contentPaint)
+    y += 20f
+    canvas.drawText("Overdue Books: ${overdue.size}", 40f, y, contentPaint)
+    y += 20f
+    canvas.drawText("Pending Fines: ₹$totalPendingFine", 40f, y, contentPaint)
+    y += 40f
+
+    canvas.drawText("OVERDUE BOOKS LIST", 40f, y, titlePaint)
+    y += 20f
+    if (overdue.isEmpty()) {
+        canvas.drawText("No overdue books.", 40f, y, contentPaint)
+        y += 20f
+    } else {
+        overdue.take(10).forEach { tx ->
+            canvas.drawText("- ${tx.bookTitle} (Student: ${tx.studentName})", 40f, y, contentPaint)
+            y += 20f
+        }
+    }
+
+    pdfDocument.finishPage(page)
+
+    val file = File(context.getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS), "Library_Report_${System.currentTimeMillis()}.pdf")
+    try {
+        pdfDocument.writeTo(FileOutputStream(file))
+        Toast.makeText(context, "PDF Report saved to Documents", Toast.LENGTH_LONG).show()
+        
+        // Open the PDF
+        val uri = androidx.core.content.FileProvider.getUriForFile(
+            context, 
+            "${context.packageName}.provider", 
+            file
+        )
+        val intent = Intent(Intent.ACTION_VIEW).apply {
+            setDataAndType(uri, "application/pdf")
+            flags = Intent.FLAG_ACTIVITY_NO_HISTORY
+            addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+        }
+        context.startActivity(intent)
+    } catch (e: Exception) {
+        Toast.makeText(context, "Error saving PDF: ${e.message}", Toast.LENGTH_SHORT).show()
+    } finally {
+        pdfDocument.close()
     }
 }
 

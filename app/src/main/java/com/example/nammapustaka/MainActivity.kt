@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Assessment
+import androidx.compose.material.icons.filled.AutoAwesome
 import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.List
@@ -56,7 +57,7 @@ sealed class Screen(val route: String, val label: String, val icon: ImageVector)
     object History : Screen("history", "History", Icons.Default.DateRange)
     object Students : Screen("students", "Students", Icons.Default.Person)
     object Leaderboard : Screen("leaderboard", "Ranking", Icons.Default.List)
-    object AI : Screen("ai_assistant", "AI", Icons.Default.Search)
+    object AI : Screen("ai_assistant", "AI", Icons.Default.AutoAwesome)
     object Admin : Screen("admin", "Admin", Icons.Default.Assessment)
 }
 
@@ -73,8 +74,7 @@ fun MainApp() {
         Screen.Home,
         Screen.Scan,
         Screen.History,
-        Screen.Students,
-        Screen.Leaderboard,
+        Screen.AI,
         Screen.Admin
     )
 
@@ -113,10 +113,10 @@ fun MainApp() {
             composable(Screen.Home.route) { HomeScreen(viewModel, navController) }
             composable(Screen.Scan.route) { ScannerScreen(viewModel, navController) }
             composable(Screen.History.route) { HistoryScreen(viewModel) }
-            composable(Screen.Students.route) { StudentScreen(viewModel) }
+            composable(Screen.Students.route) { StudentScreen(viewModel, navController) }
             composable(Screen.Leaderboard.route) { LeaderboardScreen(viewModel) }
             composable(Screen.AI.route) { AIAssistantScreen(navController) }
-            composable(Screen.Admin.route) { DashboardScreen(viewModel) }
+            composable(Screen.Admin.route) { DashboardScreen(viewModel, navController) }
             composable("add_book") { AddBookScreen(viewModel, navController) }
             composable(
                 route = "book_detail/{bookId}",
