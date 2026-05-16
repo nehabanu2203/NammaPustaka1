@@ -3,7 +3,7 @@ plugins {
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.google.devtools.ksp)
-    // alias(libs.plugins.google.services) // Requires google-services.json from Firebase Console
+    alias(libs.plugins.google.services)
 }
 
 android {
@@ -50,6 +50,7 @@ dependencies {
     implementation(libs.androidx.compose.ui.graphics)
     implementation(libs.androidx.compose.ui.tooling.preview)
     implementation(libs.androidx.compose.material3)
+    implementation(libs.firebase.ai)
     implementation(libs.material)
     implementation("androidx.compose.material:material-icons-extended:1.7.0")
     
