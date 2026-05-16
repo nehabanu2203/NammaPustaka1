@@ -52,13 +52,10 @@ Namma Pustaka is a comprehensive Library Management System built with modern And
   - `theme/`: App color schemes, typography, and shapes.
 - `viewmodel/`: LibraryViewModel for managing state and business logic.
 
-## 📸 Screenshots
-
-*(Add your screenshots here)*
 
 ## 📊 Project Status
 
-This project has been updated to meet the **Automated Project Evaluation Criteria**:
+This project contains
 - ✅ **Source Code**: Complete implementation in Kotlin and Jetpack Compose.
 - ✅ **Documentation**: Detailed README with setup instructions and features.
 - ✅ **Structure**: Organized folder structure following separation of concerns.
