@@ -103,11 +103,11 @@ NammaPustaka1/
 
 | Dashboard | Lending History | Student Registration |
 |:---:|:---:|:---:|
-| <img src="https://github.com/user-attachments/assets/12d493d3-1a8d-4a04-b4ec-639dbe01fc26" width="250"/> | <img src="https://github.com/user-attachments/assets/2526eddc-34f7-4ad1-b048-ff041d22c479" width="250"/> | <img src="https://github.com/user-attachments/assets/84880049-2ba3-4618-88ed-c010eb79a465" width="250"/> |
+|  <img src="https://github.com/user-attachments/assets/d0b5fb70-5207-418f-b7a3-dedf2350f2c0" width="250"/> | <img src="https://github.com/user-attachments/assets/12d493d3-1a8d-4a04-b4ec-639dbe01fc26" width="250"/> | <img src="https://github.com/user-attachments/assets/2526eddc-34f7-4ad1-b048-ff041d22c479" width="250"/>|
 
 | Leaderboard |
 |:---:|
-| <img src="https://github.com/user-attachments/assets/d0b5fb70-5207-418f-b7a3-dedf2350f2c0" width="250"/> |
+|<img src="https://github.com/user-attachments/assets/84880049-2ba3-4618-88ed-c010eb79a465" width="250"/> |
 
 ---
 
